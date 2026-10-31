@@ -1,5 +1,6 @@
 ;;;; facematch.lisp --- How probable it is that candidate photos show the person of master photos: facematch.
 ;;;; Copyright (C) 2026 Michael A Jones.  GPL-3.0-or-later; see LICENSE.
+;;;; Needs: Tuatara 0.90.13
 ;;;;
 ;;;; A package, not part of the editor: loaded by (load-package "facematch")
 ;;;; in the init file. It drives the facematch engine, a project of its own
