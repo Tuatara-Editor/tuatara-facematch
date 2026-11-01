@@ -111,7 +111,8 @@ ranking column shows beside it (FACEMATCH-RANKING).")
 
 (defun facematch-ranking-cells (directory entries)
   "The ranking column's texts beside ENTRIES of DIRECTORY: each photo's
-probability, the ODNI's words and the similarity, master for a master photo,
+probability, the words of the Office of the Director of National Intelligence
+(ODNI) and the similarity, master for a master photo,
 why one was not compared; nothing for a file that was not in the comparison."
   (map 'simple-vector (lambda (entry) (gethash (rimu-path directory entry) *facematch-ranking*)) entries))
 
@@ -237,7 +238,8 @@ with HERE the ranking is to show in this list, else in a list of its own."
 by how probable it is that each shows the person of the master photos marked
 \(\\<rimu-mode>\\[rimu-mark-master], M, in any list), in a rimu list of their own, *facematch*:
 the masters, then the candidates, the most probable first, each with its
-probability, the ODNI's words for it (Almost certain, Very likely, Likely,
+probability, the words of the Office of the Director of National Intelligence
+(ODNI) for it (Almost certain, Very likely, Likely,
 Even chance, Unlikely, Very unlikely, Almost no chance) and the similarity,
 the preview showing each. With \\[universal-argument], asks for a detection
 confidence for this run (0.8, the strict one). The engine runs shut in the
