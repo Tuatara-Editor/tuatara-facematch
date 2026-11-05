@@ -10,7 +10,7 @@
 ;;;; the file *facematch-program* names.
 ;;;;
 ;;;; Photos are chosen in rimu, its preview showing each: \[rimu-mark-master]
-;;;; marks a master photo of the person looked for (M, in any list: masters
+;;;; marks a master photo of the person looked for (M, in any list, since masters
 ;;;; often stand in a folder of their own), m marks candidates as for any
 ;;;; operation, and \[facematch-compare] compares every master photo marked
 ;;;; with the candidates marked in the list, in the background. The ranking
