@@ -1,6 +1,6 @@
 ;;;; facematch.lisp --- How probable it is that candidate photos show the person of master photos: facematch.
 ;;;; Copyright (C) 2026 Michael A Jones.  GPL-3.0-or-later; see LICENSE.
-;;;; Needs: Tuatara 0.90.13
+;;;; Needs: Tuatara 0.90.20
 ;;;;
 ;;;; A package, not part of the editor: loaded by (load-package "facematch")
 ;;;; in the init file. It drives the facematch engine, a project of its own
@@ -273,7 +273,7 @@ Where the ranking shows already, show the list as it was instead."
   ;; under C-c f, beside rimu's own C-c f m: the one-letter keys of a list are under C-c too
   (define-keys *rimu-keymap* '(("C-c f f" facematch-compare) ("C-c f r" facematch-rank-here)))
   (label-keys *rimu-keymap* '(("C-c f" "faces")))
-  (set-rimu-column :facematch #'facematch-ranking-cells :place :before :shown 'facematch-ranking-shown-p
+  (rimu-set-column :facematch #'facematch-ranking-cells :place :before :shown 'facematch-ranking-shown-p
                    :documentation "The ranking of the last comparison of faces (facematch).")
   (commands-for-mode 'rimu-mode "a rimu list, with the facematch package" 'facematch-compare 'facematch-rank-here)
   (pushnew 'facematch-health-words *health-decoder-functions*))
