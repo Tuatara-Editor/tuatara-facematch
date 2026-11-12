@@ -48,17 +48,17 @@ On Arch and Omarchy, an AppImage needs FUSE 2 to run: `sudo pacman -S fuse2`.
 
 ## Comparing
 
-1. Open the folder with the master photos in rimu (`C-x d`). The preview shows
-   the photo under the cursor.
+1. Open the directory with the master photos in rimu (`C-x d`). The preview
+   shows the photo under the cursor.
 2. **`C-c f m`** (Tuatara's own `rimu-mark-master`) marks a photo as master:
    `M` in the first column. Mark one, or
    several of the same person; they're averaged into one template. `u` takes a
    mark away.
-3. Open the folder of the candidates (it may be another one). **`m`** marks
+3. Open the directory of the candidates (it may be another one). **`m`** marks
    each candidate (`>`), as for any rimu operation.
 4. **`C-c f f`** compares every master marked, in any rimu list, with the
-   candidates marked in the folder this list shows (marks kept in other
-   folders are not taken).
+   candidates marked in the directory this list shows (marks kept in other
+   directories are not taken).
    `C-u C-c f f` asks for a detection confidence for this run (0.8, the strict
    one).
 
@@ -152,7 +152,7 @@ The photos may be evidence, and a picture can be made to harm the program
 reading it, so the engine runs shut in Tuatara's sandbox:
 
 - it sees private copies of the photos under names of its own
-  (`master-1.jpg`, `candidate-2.png`), never the photos' folders or names;
+  (`master-1.jpg`, `candidate-2.png`), never the photos' directories or names;
 - its AppImage is unpacked once, outside the sandbox (it's your own program),
   into Tuatara's cache, and run from there read only, so no run can change it
   for the next;
@@ -163,11 +163,11 @@ The copies are deleted when it is done; the photos are only read.
 
 ## Settings
 
-| Setting | Standard | What it is |
-|---|---|---|
-| `*facematch-program*` | `"facematch"` | The engine: a name on the system's own `PATH`, or a full path, its AppImage too. |
-| `*facematch-detection-confidence*` | `nil` | How sure the detector must be for a face to count; `nil` for the engine's own, 0.7. |
-| `*facematch-seconds*` | `900` | The most seconds one comparison may take. |
+| Setting | Standard | Values | What it is |
+|---|---|---|---|
+| `*facematch-program*` | `"facematch"` | text | The engine: a name on the system's own `PATH`, or a full path, its AppImage too. |
+| `*facematch-detection-confidence*` | `nil` | `nil`, or a number above 0 and at most 1 | How sure the detector must be for a face to count; `nil` for the engine's own, 0.7. |
+| `*facematch-seconds*` | `900` | a whole number, 1 or more | The most seconds one comparison may take. |
 
 ## Tests
 
@@ -197,7 +197,7 @@ tools/test.sh
 ```
 
 runs its tests against a Tuatara source tree: `../tuatara` beside this
-repository, or `../../tuatara` beside the folder it is in, unless
+repository, or `../../tuatara` beside the directory it is in, unless
 `TUATARA_SOURCE` names another. How a package is laid out and which of
 Tuatara's names it may use are in Tuatara's
 [HACKING.org](https://github.com/Tuatara-Editor/tuatara/blob/main/HACKING.org);

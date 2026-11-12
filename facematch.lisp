@@ -1,6 +1,6 @@
 ;;;; facematch.lisp --- How probable it is that candidate photos show the person of master photos: facematch.
 ;;;; Copyright (C) 2026 Michael A Jones.  GPL-3.0-or-later; see LICENSE.
-;;;; Needs: Tuatara 0.90.20
+;;;; Needs: Tuatara 0.90.25
 ;;;;
 ;;;; A package, not part of the editor: loaded by (load-package "facematch")
 ;;;; in the init file. It drives the facematch engine, a project of its own
@@ -11,7 +11,7 @@
 ;;;;
 ;;;; Photos are chosen in rimu, its preview showing each: \[rimu-mark-master]
 ;;;; marks a master photo of the person looked for (M, in any list, since masters
-;;;; often stand in a folder of their own), m marks candidates as for any
+;;;; often stand in a directory of their own), m marks candidates as for any
 ;;;; operation, and \[facematch-compare] compares every master photo marked
 ;;;; with the candidates marked in the list, in the background. The ranking
 ;;;; is a rimu list of its own, *facematch*: the masters, then the candidates
@@ -32,33 +32,42 @@
 
 (defpackage #:facematch
   (:use #:cl #:tuatara)
-  (:documentation "How probable it is that candidate photos show the person of master photos, by the facematch engine."))
+  (:documentation
+   "How probable it is that candidate photos show the person of master photos, by the facematch engine."))
 
 (in-package #:facematch)
 
 ;;; Settings
 
 (define-package-setting *facematch-program* "facematch"
-  "The facematch engine: a name looked for in the system's own folders of
-programs, or the full path of one anywhere, its AppImage too
-\(\"~/Applications/facematch-x86_64.AppImage\").")
+  "The facematch engine to run.
+- a name: looked for in the system's own directories of programs.
+- a path: that program, anywhere, its AppImage too
+  (\"~/Applications/facematch-x86_64.AppImage\")."
+  :values string)
 
 (define-package-setting *facematch-detection-confidence* nil
-  "How sure the face detector must be, above 0 and at most 1, for a face to
-count; NIL for the engine's own, 0.7. \\[universal-argument] \\[facematch-compare] asks
-for one run's.")
+  "How sure the face detector must be for a face to count.
+\\[universal-argument] \\[facematch-compare] asks for one run's.
+- nil: the engine's own, 0.7.
+- a number above 0 and at most 1: that confidence."
+  :values (or (member nil) (number 0 1)))
 
 (define-package-setting *facematch-seconds* 900
-  "The most seconds one comparison may take before the engine is stopped.")
+  "The most seconds one comparison may take before the engine is stopped.
+- a whole number, 1 or more: the seconds, 900 by default."
+  :values (integer 1 *))
 
 ;;; A comparison, in the background
 
-(defstruct (facematch-job (:include job) (:constructor make-facematch-job (buffer masters candidates confidence &optional here)) (:copier nil))
+(defstruct (facematch-job (:include job)
+                          (:constructor make-facematch-job (buffer masters candidates confidence &optional here))
+                          (:copier nil))
   "The photos CANDIDATES compared with the master photos MASTERS by the
-engine, with CONFIDENCE for this run or NIL, a job for BUFFER: HERE when the
-ranking is to show in BUFFER itself, the ranked list kept in the background;
-REPORT, what it said, read JSON; RANKING and GROUPS, its ranking as
-FACEMATCH-RANKING gives them; FAILURE, why there is no report."
+engine, with CONFIDENCE for this run or NIL, a job for BUFFER. HERE is true when
+the ranking is to show in BUFFER itself, the ranked list kept in the
+background. REPORT is what it said, read JSON. RANKING and GROUPS are its
+ranking as FACEMATCH-RANKING gives them. FAILURE is why there is no report."
   masters candidates confidence here report ranking groups failure)
 
 (setf (documentation 'facematch-job-p 'function) "True when OBJECT is a FACEMATCH-JOB.")
@@ -87,8 +96,10 @@ their copies as the sandbox shows them, with CONFIDENCE for the run."
 \(RUN-ON-COPIES-FOR-REPORT), and keeps its ranking, or why there is none."
   (multiple-value-bind (report names failure)
       (run-on-copies-for-report *facematch-program*
-                                (list (cons "master" (facematch-job-masters job)) (cons "candidate" (facematch-job-candidates job)))
-                                (lambda (masters candidates) (facematch-arguments masters candidates (facematch-job-confidence job)))
+                                (list (cons "master" (facematch-job-masters job))
+                                      (cons "candidate" (facematch-job-candidates job)))
+                                (lambda (masters candidates)
+                                  (facematch-arguments masters candidates (facematch-job-confidence job)))
                                 :label "The engine" :seconds-setting '*facematch-seconds*
                                 :missing (format nil "The facematch engine is not there: ~a" *facematch-getting-words*)
                                 :memory (* 16 1024 1024 1024) :cancel (job-cancel job))
@@ -126,10 +137,12 @@ a comparison, or a list the ranking was asked for in (\\<rimu-mode>\\[facematch-
   (let ((masters (length (json-items report "masters")))
         (agreement (json-get report "agreement"))
         (together (json-get report "agreement_probability")))
-    (format nil "~d candidate~:p ranked against ~d master photo~:p~@[ (~a)~]: ~@[~a~]~@[ finding faces by ~a~], probabilities calibrated on ~a"
+    (format nil
+            "~d candidate~:p ranked against ~d master photo~:p~@[ (~a)~]: ~@[~a~]~@[ finding faces by ~a~], probabilities calibrated on ~a"
             (length (json-items report "results")) masters
             (and (realp agreement)
-                 (format nil "the least alike two ~,4f alike, ~,1f% one person~:[~;: they may not all be the same person~]"
+                 (format nil
+                         "the least alike two ~,4f alike, ~,1f% one person~:[~;: they may not all be the same person~]"
                          agreement together (and (realp together) (< together 50))))
             (json-text report "model") (json-text report "detector")
             (or (json-text report "calibration") "nothing said"))))
@@ -174,7 +187,9 @@ ranked order, those not compared after, as paths."
 ranked, each with its ranking beside it; or say why there is none."
   (let ((report (facematch-job-report job)))
     (cond (report
-           (let ((here (and (facematch-job-here job) (live-buffer-p (facematch-job-buffer job)) (facematch-job-buffer job)))
+           (let ((here (and (facematch-job-here job)
+                            (live-buffer-p (facematch-job-buffer job))
+                            (facematch-job-buffer job)))
                  (old (find-buffer "*facematch*")))
              (setf *facematch-ranking* (facematch-job-ranking job))
              ;; a ranked list of an earlier comparison would show this one's ranking beside its photos
@@ -207,7 +222,9 @@ and the marks of CANDIDATES, the photos compared, taken away."
     (setf (buffer-local buffer 'facematch-ranking) t)
     ;; read again: a column's texts are found as the directory is read
     (rimu-take-out buffer others :reread t :only t)
-    (message "~d photo~:p ranked here, the other lines taken out; \\<rimu-mode>\\[facematch-rank-here] shows the list as it was" shown)))
+    (message
+     "~d photo~:p ranked here, the other lines taken out; \\<rimu-mode>\\[facematch-rank-here] shows the list as it was"
+     shown)))
 
 ;;; Choosing the photos in rimu
 
@@ -221,7 +238,8 @@ with HERE the ranking is to show in this list, else in a list of its own."
     (setf (values masters candidates) (rimu-paths-marked-apart *rimu-master-mark* :files-only t :buffer buffer))
     (cond ((not (rimu-list-p buffer)) (message "Candidates are marked in a rimu list (\\[rimu]), and compared from it"))
           ((null masters) (message "No master photo is marked: \\<rimu-mode>\\[rimu-mark-master] marks one (M)"))
-          ((null candidates) (message "No candidate is marked in this directory: \\<rimu-mode>\\[list-mark-entry] marks one"))
+          ((null candidates)
+           (message "No candidate is marked in this directory: \\<rimu-mode>\\[list-mark-entry] marks one"))
           ((null (user-program-path *facematch-program*))
            (message "The facematch engine is not there: ~a" *facematch-getting-words*))
           (t (let ((confidence (if confidence-asked
@@ -231,17 +249,18 @@ with HERE the ranking is to show in this list, else in a list of its own."
                  (error "*facematch-detection-confidence* must be above 0 and at most 1, not ~s" confidence))
                (start-job-thread (make-facematch-job buffer masters candidates confidence here) #'facematch-work
                                  :name "tuatara facematch")
-               (message "Comparing ~d candidate~:p with ~d master photo~:p..." (length candidates) (length masters)))))))
+               (message "Comparing ~d candidate~:p with ~d master photo~:p..."
+                        (length candidates) (length masters)))))))
 
 (define-command facematch-compare ()
   "Rank the candidate photos marked (m) in the directory this rimu list shows
 by how probable it is that each shows the person of the master photos marked
-\(\\<rimu-mode>\\[rimu-mark-master], M, in any list), in a rimu list of their own, *facematch*:
-the masters, then the candidates, the most probable first, each with its
-probability, the words of the Office of the Director of National Intelligence
-(ODNI) for it (Almost certain, Very likely, Likely,
+\(\\<rimu-mode>\\[rimu-mark-master], M, in any list), in a rimu list of their own, *facematch*.
+The list shows the masters, then the candidates, the most probable first.
+Each has its probability, the words of the Office of the Director of National
+Intelligence (ODNI) for it (Almost certain, Very likely, Likely,
 Even chance, Unlikely, Very unlikely, Almost no chance) and the similarity,
-the preview showing each. With \\[universal-argument], asks for a detection
+and the preview shows each. With \\[universal-argument], asks for a detection
 confidence for this run (0.8, the strict one). The engine runs shut in the
 sandbox on copies of the photos, in the background; the photos are only read."
   (facematch-start nil))
