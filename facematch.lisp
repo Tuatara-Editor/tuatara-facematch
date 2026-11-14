@@ -123,22 +123,31 @@ ranking column shows beside it (FACEMATCH-RANKING).")
 (defun facematch-ranking-cells (directory entries)
   "The ranking column's texts beside ENTRIES of DIRECTORY: each photo's
 probability, the words of the Office of the Director of National Intelligence
-(ODNI) and the similarity, master for a master photo,
-why one was not compared; nothing for a file that was not in the comparison."
+(ODNI) and the similarity, master for a master photo, why one was not
+compared; nothing for a file that was not in the comparison."
   (map 'simple-vector (lambda (entry) (gethash (rimu-path directory entry) *facematch-ranking*)) entries))
 
 (defun facematch-ranking-shown-p (buffer)
-  "True when the rimu list BUFFER shows the ranking column: the ranked list of
-a comparison, or a list the ranking was asked for in (\\<rimu-mode>\\[facematch-rank-here])."
+  "True when the rimu list BUFFER shows the ranking column: the ranked list of a
+comparison, or a list the ranking was asked for in
+\(\\<rimu-mode>\\[facematch-rank-here])."
   (buffer-local buffer 'facematch-ranking))
+
+(defun probability-face (percent)
+  "The face a probability of PERCENT per cent is shown in: :info from 80
+\(very likely and above), :warning from 45 (likely down to an even chance),
+:error below."
+  (cond ((>= percent 80) :info)
+        ((>= percent 45) :warning)
+        (t :error)))
 
 (defun facematch-ranking-words (report)
   "The line over the ranked list saying what was compared and how."
   (let ((masters (length (json-items report "masters")))
         (agreement (json-get report "agreement"))
         (together (json-get report "agreement_probability")))
-    (format nil
-            "~d candidate~:p ranked against ~d master photo~:p~@[ (~a)~]: ~@[~a~]~@[ finding faces by ~a~], probabilities calibrated on ~a"
+    (format nil "~d candidate~:p ranked against ~d master photo~:p~@[ (~a)~]: ~@[~a~]~@[ finding faces by ~a~], ~
+                 probabilities calibrated on ~a"
             (length (json-items report "results")) masters
             (and (realp agreement)
                  (format nil
@@ -168,7 +177,7 @@ ranked order, those not compared after, as paths."
                  (setf (gethash photo ranking)
                        (list (cons (format nil "~5,1f%  ~17a" (if (realp percent) percent 0)
                                            (or (json-text r "label") ""))
-                                   (likelihood-face (if (realp percent) percent 0)))
+                                   (probability-face (if (realp percent) percent 0)))
                              (cons (format nil "~@[ similarity ~,4f~]~@[  likeliest of ~d faces~]"
                                            (and (realp similarity) similarity) (and faces (> faces 1) faces))
                                    nil)))))
@@ -205,9 +214,9 @@ ranked, each with its ranking beside it; or say why there is none."
           (t (message "~a" (job-ending-words job))))))
 
 (defun facematch-show-ranking-in (buffer candidates)
-  "Show the last comparison's ranking beside the photos of the rimu list
-BUFFER, the lines of the other files taken out, as \\<rimu-mode>\\[rimu-take-out-lines] takes them,
-and the marks of CANDIDATES, the photos compared, taken away."
+  "Show the last comparison's ranking beside the photos of the rimu list BUFFER,
+the lines of the other files taken out, as \\<rimu-mode>\\[rimu-take-out-lines]
+takes them, and the marks of CANDIDATES, the photos compared, taken away."
   (let ((directory (rimu-list-directory buffer))
         (marks (rimu-marks buffer))
         (others '()) (shown 0))
@@ -253,24 +262,25 @@ with HERE the ranking is to show in this list, else in a list of its own."
                         (length candidates) (length masters)))))))
 
 (define-command facematch-compare ()
-  "Rank the candidate photos marked (m) in the directory this rimu list shows
-by how probable it is that each shows the person of the master photos marked
-\(\\<rimu-mode>\\[rimu-mark-master], M, in any list), in a rimu list of their own, *facematch*.
-The list shows the masters, then the candidates, the most probable first.
-Each has its probability, the words of the Office of the Director of National
-Intelligence (ODNI) for it (Almost certain, Very likely, Likely,
-Even chance, Unlikely, Very unlikely, Almost no chance) and the similarity,
-and the preview shows each. With \\[universal-argument], asks for a detection
-confidence for this run (0.8, the strict one). The engine runs shut in the
-sandbox on copies of the photos, in the background; the photos are only read."
+  "Rank the candidate photos marked (m) in the directory this rimu list shows by
+how probable it is that each shows the person of the master photos marked
+\(\\<rimu-mode>\\[rimu-mark-master], M, in any list), in a rimu list of their
+own, *facematch*. The list shows the masters, then the candidates, the most
+probable first. Each has its probability, the words of the Office of the
+Director of National Intelligence (ODNI) for it (Almost certain, Very likely,
+Likely, Even chance, Unlikely, Very unlikely, Almost no chance) and the
+similarity, and the preview shows each. With \\[universal-argument], asks for a
+detection confidence for this run (0.8, the strict one). The engine runs shut in
+the sandbox on copies of the photos, in the background; the photos are only
+read."
   (facematch-start nil))
 
 (define-command facematch-rank-here ()
   "Rank the candidates as \\[facematch-compare] does, and show the ranking in
 this rimu list, beside the photos' names, the lines of the files not compared
-taken out, as \\<rimu-mode>\\[rimu-take-out-lines] takes them, the candidates' marks taken away
-\(\\[facematch-compare] shows the ranking in a list of its own).
-Where the ranking shows already, show the list as it was instead."
+taken out, as \\<rimu-mode>\\[rimu-take-out-lines] takes them, the candidates'
+marks taken away (\\[facematch-compare] shows the ranking in a list of its
+own). Where the ranking shows already, show the list as it was instead."
   (let ((buffer (current-buffer)))
     (if (and (rimu-list-p buffer) (buffer-local buffer 'facematch-ranking))
         (progn (setf (buffer-local buffer 'facematch-ranking) nil)

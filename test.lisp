@@ -172,3 +172,9 @@ no arguments, gives true, or TRIES turns have gone."
       (is string= "not compared: still none" (car (gethash "/case/crowd.png" ranking)))
       (is string= "not compared: two faces" (car (gethash "/case/alice-rotorua.jpg" ranking)))
       (true (search "60.0%  Likely" (car (first (gethash "/case/zed.jpg" ranking))))))))
+
+(define-test (facematch probability-colours-its-own)
+  ;; the faces of the probability column are the package's choice, not the editor's
+  (let ((face (find-symbol "PROBABILITY-FACE" "FACEMATCH")))
+    (true (and face (eq (symbol-package face) (find-package "FACEMATCH"))))
+    (is equal '(:info :warning :warning :error) (mapcar face '(97.2 79.9 45 44.9)))))
