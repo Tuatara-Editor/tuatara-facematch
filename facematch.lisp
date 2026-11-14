@@ -1,6 +1,6 @@
 ;;;; facematch.lisp --- How probable it is that candidate photos show the person of master photos: facematch.
 ;;;; Copyright (C) 2026 Michael A Jones.  GPL-3.0-or-later; see LICENSE.
-;;;; Needs: Tuatara 0.90.25
+;;;; Needs: Tuatara 0.90.30
 ;;;;
 ;;;; A package, not part of the editor: loaded by (load-package "facematch")
 ;;;; in the init file. It drives the facematch engine, a project of its own
@@ -218,10 +218,8 @@ ranked, each with its ranking beside it; or say why there is none."
 the lines of the other files taken out, as \\<rimu-mode>\\[rimu-take-out-lines]
 takes them, and the marks of CANDIDATES, the photos compared, taken away."
   (let ((directory (rimu-list-directory buffer))
-        (marks (rimu-marks buffer))
         (others '()) (shown 0))
-    (dolist (path candidates)
-      (when (eql (gethash path marks) #\>) (remhash path marks)))
+    (rimu-unmark-paths buffer candidates :only-mark #\>)
     (rimu-each-line buffer (lambda (line entry)
                              (declare (ignore line))
                              (if (gethash (rimu-path directory entry) *facematch-ranking*)
