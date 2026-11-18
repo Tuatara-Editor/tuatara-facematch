@@ -1,6 +1,6 @@
 ;;;; facematch.lisp --- How probable it is that candidate photos show the person of master photos: facematch.
 ;;;; Copyright (C) 2026 Michael A Jones.  GPL-3.0-or-later; see LICENSE.
-;;;; Needs: Tuatara 0.90.30
+;;;; Needs: Tuatara 0.90.34
 ;;;;
 ;;;; A package, not part of the editor: loaded by (load-package "facematch")
 ;;;; in the init file. It drives the facematch engine, a project of its own
@@ -55,8 +55,9 @@
 
 (define-package-setting *facematch-seconds* 900
   "The most seconds one comparison may take before the engine is stopped.
-- a whole number, 1 or more: the seconds, 900 by default."
-  :values (integer 1 *))
+- a time, 1 second or more: seconds, or words such as \"15m\" or \"2h\"; 900 by
+  default."
+  :values (seconds 1 * :whole))
 
 ;;; A comparison, in the background
 

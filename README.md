@@ -167,7 +167,7 @@ The copies are deleted when it is done; the photos are only read.
 |---|---|---|---|
 | `*facematch-program*` | `"facematch"` | text | The engine: a name on the system's own `PATH`, or a full path, its AppImage too. |
 | `*facematch-detection-confidence*` | `nil` | `nil`, or a number above 0 and at most 1 | How sure the detector must be for a face to count; `nil` for the engine's own, 0.7. |
-| `*facematch-seconds*` | `900` | a whole number, 1 or more | The most seconds one comparison may take. |
+| `*facematch-seconds*` | `900` | a time, 1 second or more, or words such as `"15m"` | The most seconds one comparison may take. |
 
 ## Tests
 
