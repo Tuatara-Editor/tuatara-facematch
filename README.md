@@ -16,6 +16,11 @@ The manual says how to compare, what a probability means and where it should
 not be trusted, how the photos are kept safe, and lists every command and
 setting.
 
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="media/facematch-light.gif">
+  <img alt="Two reference photos of a woman marked as masters, nine photos marked as candidates, and the ranking, the most probable first, each photo in the preview" src="media/facematch.gif">
+</picture>
+
 ## What it needs
 
 - Tuatara 0.90.34 or later.
