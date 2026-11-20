@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src  'self'; img-src 'self' file:; script-src 'self'; base-uri 'none'; form-action 'none'">
+<title>What the probability means &ndash; facematch Manual</title>
+<link rel="icon" href="tuatara.png">
+<link rel="stylesheet" href="manual.css">
+<script src="manual.js" defer></script>
+</head>
+<body>
+<div class="site">
+<nav class="toc" id="contents" aria-label="Contents">
+<strong>facematch Manual</strong>
+<small>for Tuatara 0.90.34 and later</small>
+<p class="tools"><a href="all.html">All on one page</a>
+<button type="button" class="theme" hidden>Dark</button></p>
+<input type="search" placeholder="Search the manual" aria-label="Search the manual">
+<ol class="chapters"><li id="nav-index"><a href="index.html">0 Contents</a></li><li id="nav-01-what-facematch-is"><a href="01-what-facematch-is.html">1 What facematch is</a><ol><li><a href="01-what-facematch-is.html#loading-it-and-the-engine">1.1 Loading it and the engine</a></li><li><a href="01-what-facematch-is.html#what-the-engine-needs">1.2 What the engine needs</a></li><li><a href="01-what-facematch-is.html#what-this-manual-covers">1.3 What this manual covers</a></li></ol></li><li id="nav-02-comparing-photos"><a href="02-comparing-photos.html">2 Comparing photos</a><ol><li><a href="02-comparing-photos.html#marking-the-masters-and-the-candidates">2.1 Marking the masters and the candidates</a></li><li><a href="02-comparing-photos.html#the-ranked-list">2.2 The ranked list</a></li><li><a href="02-comparing-photos.html#the-words">2.3 The words</a></li><li><a href="02-comparing-photos.html#ranking-in-the-list-you-are-in">2.4 Ranking in the list you are in</a></li><li><a href="02-comparing-photos.html#when-nothing-happens">2.5 When nothing happens</a></li></ol></li><li id="nav-03-what-the-probability-means" class="here"><a class="here" href="03-what-the-probability-means.html">3 What the probability means</a><ol><li><a href="03-what-the-probability-means.html#how-it-held-on-lfw">3.1 How it held on LFW</a></li><li><a href="03-what-the-probability-means.html#where-it-should-not-be-trusted">3.2 Where it should not be trusted</a></li></ol></li><li id="nav-04-safety-and-settings"><a href="04-safety-and-settings.html">4 Safety and settings</a><ol><li><a href="04-safety-and-settings.html#the-settings">4.1 The settings</a></li></ol></li><li id="nav-05-every-command-and-setting"><a href="05-every-command-and-setting.html">5 Every command and setting</a><ol><li><a href="05-every-command-and-setting.html#every-command">5.1 Every command</a></li><li><a href="05-every-command-and-setting.html#every-setting">5.2 Every setting</a></li></ol></li></ol>
+</nav>
+<main>
+<article>
+<div class="node"><span>Previous: <a href="02-comparing-photos.html">Comparing photos</a></span><span>Next: <a href="04-safety-and-settings.html">Safety and settings</a></span><span>Up: <a href="index.html">Contents</a></span></div>
+<h1 id="what-the-probability-means">What the probability means</h1>
+<p class="lead">How the engine makes a probability, how well it held, and where it should not
+be trusted.</p>
+<p>A similarity between two faces is not a probability. The engine turns it into
+one with a curve fitted on Labeled Faces in the Wild (LFW): 6000 pairs of
+photos known to be of one person or of two. The curve was checked on folds of
+pairs it had never seen. The fitting and its data are in the engine's project
+(<code>calibrate.py</code> and <code>calibration.json</code>).</p>
+<h2 id="how-it-held-on-lfw"><span class="num">3.1</span> How it held on LFW</h2>
+<p>These are scored on folds the curve never saw.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr><th>Measure</th><th class="right">Result</th></tr>
+</thead>
+<tbody>
+<tr><td>Pairs right at 50%</td><td class="right">98.8% (+-0.3% between folds)</td></tr>
+<tr><td>Brier score</td><td class="right">0.010</td></tr>
+<tr><td>Pairs said 0-5% likely: one person</td><td class="right">0.9%</td></tr>
+<tr><td>Said 5-20%: one person</td><td class="right">8.7%</td></tr>
+<tr><td>Said 20-45%: one person</td><td class="right">21.6%</td></tr>
+<tr><td>Said 80-95%: one person</td><td class="right">94.7%</td></tr>
+<tr><td>Said 95% and over: one person</td><td class="right">100%</td></tr>
+</tbody></table></div>
+<p>AuraFace's makers report 99.65% on LFW with their own face detector. This
+engine finds faces with YuNet, whose license is settled, and measures 98.8%.</p>
+<p>Probabilities are shown from 1% to 99%, the ends of the ODNI's scale. No
+calibration on 6000 pairs supports more certainty than that.</p>
+<p>In a photo of several people, a master's face is the largest one. A
+candidate's face is whichever of its faces is likeliest.</p>
+<h2 id="where-it-should-not-be-trusted"><span class="num">3.2</span> Where it should not be trusted</h2>
+<ul>
+<li><strong>Even prior odds.</strong> LFW's pairs are half the same person, so the probability
+  says how far the faces move the odds from 50%. If you have reason to think a
+  match is rare, such as one suspect among thousands of photos, the real
+  probability is lower than shown.</li>
+<li><strong>News photos.</strong> LFW is mostly frontal, well-lit news photography. Profile
+  views, poor light, low resolution and age gaps lower accuracy, and the
+  calibration says nothing about how much.</li>
+<li><strong>Several masters.</strong> The curve was fitted on one photo against one. A template
+  of several masters raises genuine scores by design, so the probabilities for a
+  template are somewhat generous.</li>
+<li><strong>Ethnicity.</strong> AuraFace's makers say its training data may not cover all
+  ethnicities well.</li>
+</ul>
+<p>Treat the ranking as a way to find which photos to examine, not as an
+identification.</p>
+<div class="node end"><span>Previous: <a href="02-comparing-photos.html">Comparing photos</a></span><span>Next: <a href="04-safety-and-settings.html">Safety and settings</a></span><span>Up: <a href="index.html">Contents</a></span></div>
+</article>
+</main>
+</div>
+</body>
+</html>

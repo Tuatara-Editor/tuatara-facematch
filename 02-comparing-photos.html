@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src  'self'; img-src 'self' file:; script-src 'self'; base-uri 'none'; form-action 'none'">
+<title>Comparing photos &ndash; facematch Manual</title>
+<link rel="icon" href="tuatara.png">
+<link rel="stylesheet" href="manual.css">
+<script src="manual.js" defer></script>
+</head>
+<body>
+<div class="site">
+<nav class="toc" id="contents" aria-label="Contents">
+<strong>facematch Manual</strong>
+<small>for Tuatara 0.90.34 and later</small>
+<p class="tools"><a href="all.html">All on one page</a>
+<button type="button" class="theme" hidden>Dark</button></p>
+<input type="search" placeholder="Search the manual" aria-label="Search the manual">
+<ol class="chapters"><li id="nav-index"><a href="index.html">0 Contents</a></li><li id="nav-01-what-facematch-is"><a href="01-what-facematch-is.html">1 What facematch is</a><ol><li><a href="01-what-facematch-is.html#loading-it-and-the-engine">1.1 Loading it and the engine</a></li><li><a href="01-what-facematch-is.html#what-the-engine-needs">1.2 What the engine needs</a></li><li><a href="01-what-facematch-is.html#what-this-manual-covers">1.3 What this manual covers</a></li></ol></li><li id="nav-02-comparing-photos" class="here"><a class="here" href="02-comparing-photos.html">2 Comparing photos</a><ol><li><a href="02-comparing-photos.html#marking-the-masters-and-the-candidates">2.1 Marking the masters and the candidates</a></li><li><a href="02-comparing-photos.html#the-ranked-list">2.2 The ranked list</a></li><li><a href="02-comparing-photos.html#the-words">2.3 The words</a></li><li><a href="02-comparing-photos.html#ranking-in-the-list-you-are-in">2.4 Ranking in the list you are in</a></li><li><a href="02-comparing-photos.html#when-nothing-happens">2.5 When nothing happens</a></li></ol></li><li id="nav-03-what-the-probability-means"><a href="03-what-the-probability-means.html">3 What the probability means</a><ol><li><a href="03-what-the-probability-means.html#how-it-held-on-lfw">3.1 How it held on LFW</a></li><li><a href="03-what-the-probability-means.html#where-it-should-not-be-trusted">3.2 Where it should not be trusted</a></li></ol></li><li id="nav-04-safety-and-settings"><a href="04-safety-and-settings.html">4 Safety and settings</a><ol><li><a href="04-safety-and-settings.html#the-settings">4.1 The settings</a></li></ol></li><li id="nav-05-every-command-and-setting"><a href="05-every-command-and-setting.html">5 Every command and setting</a><ol><li><a href="05-every-command-and-setting.html#every-command">5.1 Every command</a></li><li><a href="05-every-command-and-setting.html#every-setting">5.2 Every setting</a></li></ol></li></ol>
+</nav>
+<main>
+<article>
+<div class="node"><span>Previous: <a href="01-what-facematch-is.html">What facematch is</a></span><span>Next: <a href="03-what-the-probability-means.html">What the probability means</a></span><span>Up: <a href="index.html">Contents</a></span></div>
+<h1 id="comparing-photos">Comparing photos</h1>
+<p class="lead">Mark the photos in rimu, compare them, and read the ranking.</p>
+<p>Photos are chosen in rimu, so everything here happens in a rimu list. Open one
+with <code>C-x d</code>. The preview shows the photo under the cursor.</p>
+<h2 id="marking-the-masters-and-the-candidates"><span class="num">2.1</span> Marking the masters and the candidates</h2>
+<ol>
+<li>Open the directory with the master photos in rimu. The master photos show
+   the person you look for.</li>
+<li>Press <code>C-c f m</code> on a photo to mark it as a master. This is Tuatara's own
+   command, <code>rimu-mark-master</code>. An <code>M</code> appears in the first column. Mark one
+   photo, or several of the same person. Several are averaged into one
+   template. Press <code>u</code> to take a mark away.</li>
+<li>Open the directory of the candidates. It may be another directory. Press
+   <code>m</code> on each candidate, as for any rimu operation. A candidate has <code>&gt;</code> in
+   the first column.</li>
+</ol>
+<p>Masters can be marked in any rimu list, because they are often kept in a
+directory of their own. Candidates are the photos marked in the directory the
+list shows. Marks kept in other directories are not taken.</p>
+<h2 id="the-ranked-list"><span class="num">2.2</span> The ranked list</h2>
+<p><code>C-c f f</code> (<code>facematch-compare</code>) compares every master photo marked, in any
+rimu list, with the candidates marked in this directory. The engine runs in the
+background, so you can go on working. When it has finished, a rimu list named
+<code>*facematch*</code> opens. With <code>C-u C-c f f</code>, the command first asks for a detection
+confidence for this run, which starts at 0.8, the strict one. Without it, the
+setting <code>*facematch-detection-confidence*</code> is used (chapter 4).</p>
+<p>The list shows the masters first. A line apart come the candidates, the most
+probable first, each with its ranking beside its name. Moving through the list,
+the preview shows each photo. Marks and rimu's other keys work as in any list.</p>
+<pre class="ex">  ~/pictures/:
+  3 candidates ranked against 2 master photos (the least alike two 0.6123 alike, 99.0% one person): AuraFace-v1 ...
+  master                                       masters/aroha-rotorua-1.jpg
+  master                                       masters/aroha-rotorua-2.jpg
+
+   99.0%  Almost certain     similarity 0.5312                        photos/p17.jpg
+   62.4%  Likely             similarity 0.2474  likeliest of 3 faces  photos/p03.jpg
+    1.2%  Almost no chance   similarity 0.0081                        photos/p11.jpg
+  not compared: no face found                  photos/p20.jpg
+</pre>
+<p>The line over the list says how many candidates were ranked against how many
+master photos, which model and detector found and compared the faces, and what
+the probabilities were calibrated on. With several masters it also says how
+alike the two least alike masters are, and how probable it is that they show
+one person. When that is under 50%, the line adds that the masters may not all
+be the same person.</p>
+<p>Each candidate's line gives:</p>
+<ul>
+<li>the probability that it shows the master's person, in per cent. It is shown
+  in the theme's info face from 80%, its warning face from 45% and its error
+  face below that;</li>
+<li>the ODNI's words for that probability, from the table below;</li>
+<li>the similarity behind the probability, a number from the engine;</li>
+<li><code>likeliest of N faces</code> when the photo has more than one face. The face of the
+  candidate that is likeliest is the one ranked;</li>
+<li>a photo's name last.</li>
+</ul>
+<p>A photo that could not be compared, for instance because no face was found in
+it, is listed after the others, with <code>not compared</code> and the engine's reason.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr><th>Modal</th><th>Non-modal</th><th>Command</th><th>What it does</th></tr>
+</thead>
+<tbody>
+<tr><td>none</td><td><kbd>C-c f f</kbd></td><td><code>facematch-compare</code></td><td>Rank the candidate photos marked (m) in the directory this rimu list shows by how probable it is that each shows the person of the master photos marked (C-c f m, M, in any list), in a rimu list of their own, <strong>facematch</strong>.</td></tr>
+</tbody></table></div>
+<h2 id="the-words"><span class="num">2.3</span> The words</h2>
+<p>The words follow the ODNI's scale of estimative probability, from its
+Intelligence Community Directive (ICD) 203.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr><th>Words</th><th class="right">Probability</th></tr>
+</thead>
+<tbody>
+<tr><td>Almost certain</td><td class="right">95-99%</td></tr>
+<tr><td>Very likely</td><td class="right">80-95%</td></tr>
+<tr><td>Likely</td><td class="right">55-80%</td></tr>
+<tr><td>Even chance</td><td class="right">45-55%</td></tr>
+<tr><td>Unlikely</td><td class="right">20-45%</td></tr>
+<tr><td>Very unlikely</td><td class="right">5-20%</td></tr>
+<tr><td>Almost no chance</td><td class="right">1-5%</td></tr>
+</tbody></table></div>
+<h2 id="ranking-in-the-list-you-are-in"><span class="num">2.4</span> Ranking in the list you are in</h2>
+<p><code>C-c f r</code> (<code>facematch-rank-here</code>) compares the same way, but shows the ranking
+in the rimu list you are in. Beside each photo's name come its probability,
+words and similarity, with the preview on the right:</p>
+<pre class="ex">99.0%  Almost certain  similarity 0.4447  p17.jpg
+</pre>
+<p>The lines of the files that were not compared are taken out, as <code>K</code> takes lines
+out. The files themselves are not touched. The candidates' marks are taken
+away, and the masters' <code>M</code> is kept. Press <code>C-c f r</code> again to show the list as
+it was.</p>
+<p>The ranked list <code>*facematch*</code> belongs to <code>C-c f f</code> alone. A new comparison
+closes an earlier <code>*facematch*</code> first, so that its ranking is never shown
+beside photos of another comparison.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr><th>Modal</th><th>Non-modal</th><th>Command</th><th>What it does</th></tr>
+</thead>
+<tbody>
+<tr><td>none</td><td><kbd>C-c f r</kbd></td><td><code>facematch-rank-here</code></td><td>Rank the candidates as M-x facematch-compare does, and show the ranking in this rimu list, beside the photos' names, the lines of the files not compared taken out, as K takes them, the candidates' marks taken away (C-c f f shows the ranking in a list of its own).</td></tr>
+</tbody></table></div>
+<h2 id="when-nothing-happens"><span class="num">2.5</span> When nothing happens</h2>
+<p>The commands say why they did not start:</p>
+<ul>
+<li>not in a rimu list: candidates are marked in a rimu list and compared from
+  it;</li>
+<li>no master photo is marked: <code>C-c f m</code> marks one;</li>
+<li>no candidate is marked in this directory: <code>m</code> marks one;</li>
+<li>the engine is not found: the message says how to get it.</li>
+</ul>
+<p>When the engine ran but compared nothing, the message gives its reasons, one
+per photo. Only files are taken. A directory marked as a master or a candidate
+is left out.</p>
+<div class="node end"><span>Previous: <a href="01-what-facematch-is.html">What facematch is</a></span><span>Next: <a href="03-what-the-probability-means.html">What the probability means</a></span><span>Up: <a href="index.html">Contents</a></span></div>
+</article>
+</main>
+</div>
+</body>
+</html>

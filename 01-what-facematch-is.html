@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src  'self'; img-src 'self' file:; script-src 'self'; base-uri 'none'; form-action 'none'">
+<title>What facematch is &ndash; facematch Manual</title>
+<link rel="icon" href="tuatara.png">
+<link rel="stylesheet" href="manual.css">
+<script src="manual.js" defer></script>
+</head>
+<body>
+<div class="site">
+<nav class="toc" id="contents" aria-label="Contents">
+<strong>facematch Manual</strong>
+<small>for Tuatara 0.90.34 and later</small>
+<p class="tools"><a href="all.html">All on one page</a>
+<button type="button" class="theme" hidden>Dark</button></p>
+<input type="search" placeholder="Search the manual" aria-label="Search the manual">
+<ol class="chapters"><li id="nav-index"><a href="index.html">0 Contents</a></li><li id="nav-01-what-facematch-is" class="here"><a class="here" href="01-what-facematch-is.html">1 What facematch is</a><ol><li><a href="01-what-facematch-is.html#loading-it-and-the-engine">1.1 Loading it and the engine</a></li><li><a href="01-what-facematch-is.html#what-the-engine-needs">1.2 What the engine needs</a></li><li><a href="01-what-facematch-is.html#what-this-manual-covers">1.3 What this manual covers</a></li></ol></li><li id="nav-02-comparing-photos"><a href="02-comparing-photos.html">2 Comparing photos</a><ol><li><a href="02-comparing-photos.html#marking-the-masters-and-the-candidates">2.1 Marking the masters and the candidates</a></li><li><a href="02-comparing-photos.html#the-ranked-list">2.2 The ranked list</a></li><li><a href="02-comparing-photos.html#the-words">2.3 The words</a></li><li><a href="02-comparing-photos.html#ranking-in-the-list-you-are-in">2.4 Ranking in the list you are in</a></li><li><a href="02-comparing-photos.html#when-nothing-happens">2.5 When nothing happens</a></li></ol></li><li id="nav-03-what-the-probability-means"><a href="03-what-the-probability-means.html">3 What the probability means</a><ol><li><a href="03-what-the-probability-means.html#how-it-held-on-lfw">3.1 How it held on LFW</a></li><li><a href="03-what-the-probability-means.html#where-it-should-not-be-trusted">3.2 Where it should not be trusted</a></li></ol></li><li id="nav-04-safety-and-settings"><a href="04-safety-and-settings.html">4 Safety and settings</a><ol><li><a href="04-safety-and-settings.html#the-settings">4.1 The settings</a></li></ol></li><li id="nav-05-every-command-and-setting"><a href="05-every-command-and-setting.html">5 Every command and setting</a><ol><li><a href="05-every-command-and-setting.html#every-command">5.1 Every command</a></li><li><a href="05-every-command-and-setting.html#every-setting">5.2 Every setting</a></li></ol></li></ol>
+</nav>
+<main>
+<article>
+<div class="node"><span>Next: <a href="02-comparing-photos.html">Comparing photos</a></span><span>Up: <a href="index.html">Contents</a></span></div>
+<h1 id="what-facematch-is">What facematch is</h1>
+<p class="lead">A package that ranks candidate photos by how probable it is that they show the
+person of one or more master photos.</p>
+<p>You choose the photos in rimu, Tuatara's directory list, with its preview
+showing each one. You mark the master photos, which show the person you look
+for, and the candidates, which may or may not. facematch compares them and
+lists the candidates with the most probable first. Each has its probability
+and the words the Office of the Director of National Intelligence (ODNI) uses
+for it, such as &quot;Almost certain&quot; or &quot;Unlikely&quot;.</p>
+<p>It is a package, not part of the editor, and it does no face recognition
+itself. The comparison is done by the facematch engine, a project of its own
+at github.com/YardQuit/facematch. The engine is InsightFace with the
+AuraFace-v1 model and the YuNet face detector, made into one AppImage. The
+package starts it in the background, shut in Tuatara's sandbox (chapter 4).</p>
+<h2 id="loading-it-and-the-engine"><span class="num">1.1</span> Loading it and the engine</h2>
+<p>The package never downloads the engine. What runs is the file that
+<code>*facematch-program*</code> names, which you fetched and checked yourself. The
+package's README gives the steps to fetch the engine, check it and load the
+package. This manual starts after that.</p>
+<p>To see whether the engine is found, run <code>M-x check-health</code>. It lists &quot;Faces
+ranked by probability&quot; with the engine's path, or says how to get the engine.</p>
+<h2 id="what-the-engine-needs"><span class="num">1.2</span> What the engine needs</h2>
+<p>The engine's own README says how to build it instead of downloading it. On
+Arch and Omarchy, an AppImage needs FUSE 2 to run, from the package <code>fuse2</code>.</p>
+<h2 id="what-this-manual-covers"><span class="num">1.3</span> What this manual covers</h2>
+<ul>
+<li>Chapter 2 is the use: marking photos, comparing, and reading the ranked
+  list.</li>
+<li>Chapter 3 says what a probability means here and where it should not be
+  trusted.</li>
+<li>Chapter 4 says how the engine is kept from the photos and from the rest of
+  your files, and lists the settings.</li>
+<li>Chapter 5 lists every command and setting.</li>
+</ul>
+<div class="node end"><span>Next: <a href="02-comparing-photos.html">Comparing photos</a></span><span>Up: <a href="index.html">Contents</a></span></div>
+</article>
+</main>
+</div>
+</body>
+</html>
