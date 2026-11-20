@@ -1,0 +1,45 @@
+#+title: What facematch is
+#+language: en
+
+* What facematch is
+
+A package that ranks candidate photos by how probable it is that they show the
+person of one or more master photos.
+
+You choose the photos in rimu, Tuatara's directory list, with its preview
+showing each one. You mark the master photos, which show the person you look
+for, and the candidates, which may or may not. facematch compares them and
+lists the candidates with the most probable first. Each has its probability
+and the words the Office of the Director of National Intelligence (ODNI) uses
+for it, such as "Almost certain" or "Unlikely".
+
+It is a package, not part of the editor, and it does no face recognition
+itself. The comparison is done by the facematch engine, a project of its own
+at github.com/YardQuit/facematch. The engine is InsightFace with the
+AuraFace-v1 model and the YuNet face detector, made into one AppImage. The
+package starts it in the background, shut in Tuatara's sandbox (chapter 4).
+
+** Loading it and the engine
+
+The package never downloads the engine. What runs is the file that
+=*facematch-program*= names, which you fetched and checked yourself. The
+package's README gives the steps to fetch the engine, check it and load the
+package. This manual starts after that.
+
+To see whether the engine is found, run =M-x check-health=. It lists "Faces
+ranked by probability" with the engine's path, or says how to get the engine.
+
+** What the engine needs
+
+The engine's own README says how to build it instead of downloading it. On
+Arch and Omarchy, an AppImage needs FUSE 2 to run, from the package =fuse2=.
+
+** What this manual covers
+
+- Chapter 2 is the use: marking photos, comparing, and reading the ranked
+  list.
+- Chapter 3 says what a probability means here and where it should not be
+  trusted.
+- Chapter 4 says how the engine is kept from the photos and from the rest of
+  your files, and lists the settings.
+- Chapter 5 lists every command and setting.
