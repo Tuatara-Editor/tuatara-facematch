@@ -1,0 +1,123 @@
+#+title: Comparing photos
+#+language: en
+
+* Comparing photos
+
+Mark the photos in rimu, compare them, and read the ranking.
+
+Photos are chosen in rimu, so everything here happens in a rimu list. Open one
+with =C-x d=. The preview shows the photo under the cursor.
+
+** Marking the masters and the candidates
+
+1. Open the directory with the master photos in rimu. The master photos show
+   the person you look for.
+2. Press =C-c f m= on a photo to mark it as a master. This is Tuatara's own
+   command, =rimu-mark-master=. An =M= appears in the first column. Mark one
+   photo, or several of the same person. Several are averaged into one
+   template. Press =u= to take a mark away.
+3. Open the directory of the candidates. It may be another directory. Press
+   =m= on each candidate, as for any rimu operation. A candidate has =>= in
+   the first column.
+
+Masters can be marked in any rimu list, because they are often kept in a
+directory of their own. Candidates are the photos marked in the directory the
+list shows. Marks kept in other directories are not taken.
+
+** The ranked list
+
+=C-c f f= (=facematch-compare=) compares every master photo marked, in any
+rimu list, with the candidates marked in this directory. The engine runs in the
+background, so you can go on working. When it has finished, a rimu list named
+=*facematch*= opens. With =C-u C-c f f=, the command first asks for a detection
+confidence for this run, which starts at 0.8, the strict one. Without it, the
+setting =*facematch-detection-confidence*= is used (chapter 4).
+
+The list shows the masters first. A line apart come the candidates, the most
+probable first, each with its ranking beside its name. Moving through the list,
+the preview shows each photo. Marks and rimu's other keys work as in any list.
+
+#+begin_example
+  ~/pictures/:
+  3 candidates ranked against 2 master photos (the least alike two 0.6123 alike, 99.0% one person): AuraFace-v1 ...
+  master                                       masters/aroha-rotorua-1.jpg
+  master                                       masters/aroha-rotorua-2.jpg
+
+   99.0%  Almost certain     similarity 0.5312                        photos/p17.jpg
+   62.4%  Likely             similarity 0.2474  likeliest of 3 faces  photos/p03.jpg
+    1.2%  Almost no chance   similarity 0.0081                        photos/p11.jpg
+  not compared: no face found                  photos/p20.jpg
+#+end_example
+
+The line over the list says how many candidates were ranked against how many
+master photos, which model and detector found and compared the faces, and what
+the probabilities were calibrated on. With several masters it also says how
+alike the two least alike masters are, and how probable it is that they show
+one person. When that is under 50%, the line adds that the masters may not all
+be the same person.
+
+Each candidate's line gives:
+
+- the probability that it shows the master's person, in per cent. It is shown
+  in the theme's info face from 80%, its warning face from 45% and its error
+  face below that;
+- the ODNI's words for that probability, from the table below;
+- the similarity behind the probability, a number from the engine;
+- =likeliest of N faces= when the photo has more than one face. The face of the
+  candidate that is likeliest is the one ranked;
+- a photo's name last.
+
+A photo that could not be compared, for instance because no face was found in
+it, is listed after the others, with =not compared= and the engine's reason.
+
+#+table: commands facematch-compare
+
+** The words
+
+The words follow the ODNI's scale of estimative probability, from its
+Intelligence Community Directive (ICD) 203.
+
+| Words            | Probability |
+|------------------+-------------|
+| Almost certain   | 95-99%      |
+| Very likely      | 80-95%      |
+| Likely           | 55-80%      |
+| Even chance      | 45-55%      |
+| Unlikely         | 20-45%      |
+| Very unlikely    | 5-20%       |
+| Almost no chance | 1-5%        |
+
+** Ranking in the list you are in
+
+=C-c f r= (=facematch-rank-here=) compares the same way, but shows the ranking
+in the rimu list you are in. Beside each photo's name come its probability,
+words and similarity, with the preview on the right:
+
+#+begin_example
+99.0%  Almost certain  similarity 0.4447  p17.jpg
+#+end_example
+
+The lines of the files that were not compared are taken out, as =K= takes lines
+out. The files themselves are not touched. The candidates' marks are taken
+away, and the masters' =M= is kept. Press =C-c f r= again to show the list as
+it was.
+
+The ranked list =*facematch*= belongs to =C-c f f= alone. A new comparison
+closes an earlier =*facematch*= first, so that its ranking is never shown
+beside photos of another comparison.
+
+#+table: commands facematch-rank-here
+
+** When nothing happens
+
+The commands say why they did not start:
+
+- not in a rimu list: candidates are marked in a rimu list and compared from
+  it;
+- no master photo is marked: =C-c f m= marks one;
+- no candidate is marked in this directory: =m= marks one;
+- the engine is not found: the message says how to get it.
+
+When the engine ran but compared nothing, the message gives its reasons, one
+per photo. Only files are taken. A directory marked as a master or a candidate
+is left out.

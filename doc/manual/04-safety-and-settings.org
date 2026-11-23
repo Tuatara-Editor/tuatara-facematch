@@ -1,0 +1,38 @@
+#+title: Safety and settings
+#+language: en
+
+* Safety and settings
+
+How the engine is kept from your files, and the settings that change a run.
+
+The photos may be evidence, and a picture can be made to harm the program that
+reads it. So the engine runs shut in Tuatara's sandbox:
+
+- it sees private copies of the photos under names of its own, such as
+  =master-1.jpg= and =candidate-2.png=. It never sees the photos' directories
+  or names;
+- its AppImage is unpacked once, outside the sandbox because it is your own
+  program, into Tuatara's cache. It is run from there read only, so no run can
+  change it for the next one;
+- it has no network, and nothing of yours but its own files;
+- it runs in the background, with at most 16 GiB of memory, and is stopped
+  after =*facematch-seconds*=.
+
+The copies are deleted when the engine is done. The photos are only read.
+
+** The settings
+
+Set them in the package's =:config= in your init file:
+
+#+begin_src lisp
+(load-package "facematch"
+              :source "https://github.com/Tuatara-Editor/tuatara-facematch"
+              :config
+              (setf *facematch-seconds* "30m"))
+#+end_src
+
+#+table: settings *facematch-program* *facematch-detection-confidence* *facematch-seconds*
+
+A value of =*facematch-detection-confidence*= outside the range stops the
+comparison with an error. =C-u C-c f f= sets one run's value without changing
+the setting.

@@ -1,0 +1,11 @@
+#+title: facematch manual: chapters
+
+Each chapter covers one part of facematch, with its commands, keys and
+settings. The last chapter lists every command and setting, generated from the
+source.
+
+1. What facematch is
+2. Comparing photos
+3. What the probability means
+4. Safety and settings
+5. Every command and setting

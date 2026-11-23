@@ -1,0 +1,54 @@
+#+title: What the probability means
+#+language: en
+
+* What the probability means
+
+How the engine makes a probability, how well it held, and where it should not
+be trusted.
+
+A similarity between two faces is not a probability. The engine turns it into
+one with a curve fitted on Labeled Faces in the Wild (LFW): 6000 pairs of
+photos known to be of one person or of two. The curve was checked on folds of
+pairs it had never seen. The fitting and its data are in the engine's project
+(=calibrate.py= and =calibration.json=).
+
+** How it held on LFW
+
+These are scored on folds the curve never saw.
+
+| Measure                            | Result                       |
+|------------------------------------+------------------------------|
+| Pairs right at 50%                 | 98.8% (+-0.3% between folds) |
+| Brier score                        | 0.010                        |
+| Pairs said 0-5% likely: one person | 0.9%                         |
+| Said 5-20%: one person             | 8.7%                         |
+| Said 20-45%: one person            | 21.6%                        |
+| Said 80-95%: one person            | 94.7%                        |
+| Said 95% and over: one person      | 100%                         |
+
+AuraFace's makers report 99.65% on LFW with their own face detector. This
+engine finds faces with YuNet, whose license is settled, and measures 98.8%.
+
+Probabilities are shown from 1% to 99%, the ends of the ODNI's scale. No
+calibration on 6000 pairs supports more certainty than that.
+
+In a photo of several people, a master's face is the largest one. A
+candidate's face is whichever of its faces is likeliest.
+
+** Where it should not be trusted
+
+- *Even prior odds.* LFW's pairs are half the same person, so the probability
+  says how far the faces move the odds from 50%. If you have reason to think a
+  match is rare, such as one suspect among thousands of photos, the real
+  probability is lower than shown.
+- *News photos.* LFW is mostly frontal, well-lit news photography. Profile
+  views, poor light, low resolution and age gaps lower accuracy, and the
+  calibration says nothing about how much.
+- *Several masters.* The curve was fitted on one photo against one. A template
+  of several masters raises genuine scores by design, so the probabilities for a
+  template are somewhat generous.
+- *Ethnicity.* AuraFace's makers say its training data may not cover all
+  ethnicities well.
+
+Treat the ranking as a way to find which photos to examine, not as an
+identification.
