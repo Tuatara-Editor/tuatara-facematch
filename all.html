@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src  'self'; img-src 'self' file:; script-src 'self'; base-uri 'none'; form-action 'none'">
+<title>facematch Manual, all chapters</title>
+<link rel="icon" href="tuatara.png">
+<link rel="stylesheet" href="manual.css">
+<script src="manual.js" defer></script>
+</head>
+<body>
+<div class="site">
+<nav class="toc" id="contents" aria-label="Contents">
+<strong>facematch Manual</strong>
+<small>for Tuatara 0.90.34 and later</small>
+<p class="tools"><a href="index.html">By chapter</a>
+<button type="button" class="theme" hidden>Dark</button></p>
+<input type="search" placeholder="Search the manual" aria-label="Search the manual">
+<ol class="chapters"><li id="nav-index"><a href="index.html">0 Contents</a></li><li id="nav-01-what-facematch-is"><a href="#01-what-facematch-is">1 What facematch is</a><ol><li><a href="#01-what-facematch-is--loading-it-and-the-engine">1.1 Loading it and the engine</a></li><li><a href="#01-what-facematch-is--what-the-engine-needs">1.2 What the engine needs</a></li><li><a href="#01-what-facematch-is--what-this-manual-covers">1.3 What this manual covers</a></li></ol></li><li id="nav-02-comparing-photos"><a href="#02-comparing-photos">2 Comparing photos</a><ol><li><a href="#02-comparing-photos--marking-the-masters-and-the-candidates">2.1 Marking the masters and the candidates</a></li><li><a href="#02-comparing-photos--the-ranked-list">2.2 The ranked list</a></li><li><a href="#02-comparing-photos--the-words">2.3 The words</a></li><li><a href="#02-comparing-photos--ranking-in-the-list-you-are-in">2.4 Ranking in the list you are in</a></li><li><a href="#02-comparing-photos--when-nothing-happens">2.5 When nothing happens</a></li></ol></li><li id="nav-03-what-the-probability-means"><a href="#03-what-the-probability-means">3 What the probability means</a><ol><li><a href="#03-what-the-probability-means--how-it-held-on-lfw">3.1 How it held on LFW</a></li><li><a href="#03-what-the-probability-means--where-it-should-not-be-trusted">3.2 Where it should not be trusted</a></li></ol></li><li id="nav-04-safety-and-settings"><a href="#04-safety-and-settings">4 Safety and settings</a><ol><li><a href="#04-safety-and-settings--the-settings">4.1 The settings</a></li></ol></li><li id="nav-05-every-command-and-setting"><a href="#05-every-command-and-setting">5 Every command and setting</a><ol><li><a href="#05-every-command-and-setting--every-command">5.1 Every command</a></li><li><a href="#05-every-command-and-setting--every-setting">5.2 Every setting</a></li></ol></li></ol>
+</nav>
+<main>
+<article>
+<h1>facematch Manual</h1>
+<p class="lead">for Tuatara 0.90.34 and later, every chapter on one page</p>
+<p>This manual is written with modal editing on, first and foremost. Where a command also has a key that works with modal editing off, it is given as well, as the non-modal key.</p>
+<section class="chapter" id="01-what-facematch-is">
+<h1 id="01-what-facematch-is--what-facematch-is">What facematch is</h1>
+<p class="lead">A package that ranks candidate photos by how probable it is that they show the
+person of one or more master photos.</p>
+<p>You choose the photos in rimu, Tuatara's directory list, with its preview
+showing each one. You mark the master photos, which show the person you look
+for, and the candidates, which may or may not. facematch compares them and
+lists the candidates with the most probable first. Each has its probability
+and the words the Office of the Director of National Intelligence (ODNI) uses
+for it, such as &quot;Almost certain&quot; or &quot;Unlikely&quot;.</p>
+<p>It is a package, not part of the editor, and it does no face recognition
+itself. The comparison is done by the facematch engine, a project of its own
+at github.com/YardQuit/facematch. The engine is InsightFace with the
+AuraFace-v1 model and the YuNet face detector, made into one AppImage. The
+package starts it in the background, shut in Tuatara's sandbox (chapter 4).</p>
+<h2 id="01-what-facematch-is--loading-it-and-the-engine"><span class="num">1.1</span> Loading it and the engine</h2>
+<p>The package never downloads the engine. What runs is the file that
+<code>*facematch-program*</code> names, which you fetched and checked yourself. The
+package's README gives the steps to fetch the engine, check it and load the
+package. This manual starts after that.</p>
+<p>To see whether the engine is found, run <code>M-x check-health</code>. It lists &quot;Faces
+ranked by probability&quot; with the engine's path, or says how to get the engine.</p>
+<h2 id="01-what-facematch-is--what-the-engine-needs"><span class="num">1.2</span> What the engine needs</h2>
+<p>The engine's own README says how to build it instead of downloading it. On
+Arch and Omarchy, an AppImage needs FUSE 2 to run, from the package <code>fuse2</code>.</p>
+<h2 id="01-what-facematch-is--what-this-manual-covers"><span class="num">1.3</span> What this manual covers</h2>
+<ul>
+<li>Chapter 2 is the use: marking photos, comparing, and reading the ranked
+  list.</li>
+<li>Chapter 3 says what a probability means here and where it should not be
+  trusted.</li>
+<li>Chapter 4 says how the engine is kept from the photos and from the rest of
+  your files, and lists the settings.</li>
+<li>Chapter 5 lists every command and setting.</li>
+</ul>
+</section>
+<section class="chapter" id="02-comparing-photos">
+<h1 id="02-comparing-photos--comparing-photos">Comparing photos</h1>
+<p class="lead">Mark the photos in rimu, compare them, and read the ranking.</p>
+<p>Photos are chosen in rimu, so everything here happens in a rimu list. Open one
+with <code>C-x d</code>. The preview shows the photo under the cursor.</p>
+<h2 id="02-comparing-photos--marking-the-masters-and-the-candidates"><span class="num">2.1</span> Marking the masters and the candidates</h2>
+<ol>
+<li>Open the directory with the master photos in rimu. The master photos show
+   the person you look for.</li>
+<li>Press <code>C-c f m</code> on a photo to mark it as a master. This is Tuatara's own
+   command, <code>rimu-mark-master</code>. An <code>M</code> appears in the first column. Mark one
+   photo, or several of the same person. Several are averaged into one
+   template. Press <code>u</code> to take a mark away.</li>
+<li>Open the directory of the candidates. It may be another directory. Press
+   <code>m</code> on each candidate, as for any rimu operation. A candidate has <code>&gt;</code> in
+   the first column.</li>
+</ol>
+<p>Masters can be marked in any rimu list, because they are often kept in a
+directory of their own. Candidates are the photos marked in the directory the
+list shows. Marks kept in other directories are not taken.</p>
+<h2 id="02-comparing-photos--the-ranked-list"><span class="num">2.2</span> The ranked list</h2>
+<p><code>C-c f f</code> (<code>facematch-compare</code>) compares every master photo marked, in any
+rimu list, with the candidates marked in this directory. The engine runs in the
+background, so you can go on working. When it has finished, a rimu list named
+<code>*facematch*</code> opens. With <code>C-u C-c f f</code>, the command first asks for a detection
+confidence for this run, which starts at 0.8, the strict one. Without it, the
+setting <code>*facematch-detection-confidence*</code> is used (chapter 4).</p>
+<p>The list shows the masters first. A line apart come the candidates, the most
+probable first, each with its ranking beside its name. Moving through the list,
+the preview shows each photo. Marks and rimu's other keys work as in any list.</p>
+<pre class="ex">  ~/pictures/:
+  3 candidates ranked against 2 master photos (the least alike two 0.6123 alike, 99.0% one person): AuraFace-v1 ...
+  master                                       masters/aroha-rotorua-1.jpg
+  master                                       masters/aroha-rotorua-2.jpg
+
+   99.0%  Almost certain     similarity 0.5312                        photos/p17.jpg
+   62.4%  Likely             similarity 0.2474  likeliest of 3 faces  photos/p03.jpg
+    1.2%  Almost no chance   similarity 0.0081                        photos/p11.jpg
+  not compared: no face found                  photos/p20.jpg
+</pre>
+<p>The line over the list says how many candidates were ranked against how many
+master photos, which model and detector found and compared the faces, and what
+the probabilities were calibrated on. With several masters it also says how
+alike the two least alike masters are, and how probable it is that they show
+one person. When that is under 50%, the line adds that the masters may not all
+be the same person.</p>
+<p>Each candidate's line gives:</p>
+<ul>
+<li>the probability that it shows the master's person, in per cent. It is shown
+  in the theme's info face from 80%, its warning face from 45% and its error
+  face below that;</li>
+<li>the ODNI's words for that probability, from the table below;</li>
+<li>the similarity behind the probability, a number from the engine;</li>
+<li><code>likeliest of N faces</code> when the photo has more than one face. The face of the
+  candidate that is likeliest is the one ranked;</li>
+<li>a photo's name last.</li>
+</ul>
+<p>A photo that could not be compared, for instance because no face was found in
+it, is listed after the others, with <code>not compared</code> and the engine's reason.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr><th>Modal</th><th>Non-modal</th><th>Command</th><th>What it does</th></tr>
+</thead>
+<tbody>
+<tr><td>none</td><td><kbd>C-c f f</kbd></td><td><code>facematch-compare</code></td><td>Rank the candidate photos marked (m) in the directory this rimu list shows by how probable it is that each shows the person of the master photos marked (C-c f m, M, in any list), in a rimu list of their own, <strong>facematch</strong>.</td></tr>
+</tbody></table></div>
+<h2 id="02-comparing-photos--the-words"><span class="num">2.3</span> The words</h2>
+<p>The words follow the ODNI's scale of estimative probability, from its
+Intelligence Community Directive (ICD) 203.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr><th>Words</th><th class="right">Probability</th></tr>
+</thead>
+<tbody>
+<tr><td>Almost certain</td><td class="right">95-99%</td></tr>
+<tr><td>Very likely</td><td class="right">80-95%</td></tr>
+<tr><td>Likely</td><td class="right">55-80%</td></tr>
+<tr><td>Even chance</td><td class="right">45-55%</td></tr>
+<tr><td>Unlikely</td><td class="right">20-45%</td></tr>
+<tr><td>Very unlikely</td><td class="right">5-20%</td></tr>
+<tr><td>Almost no chance</td><td class="right">1-5%</td></tr>
+</tbody></table></div>
+<h2 id="02-comparing-photos--ranking-in-the-list-you-are-in"><span class="num">2.4</span> Ranking in the list you are in</h2>
+<p><code>C-c f r</code> (<code>facematch-rank-here</code>) compares the same way, but shows the ranking
+in the rimu list you are in. Beside each photo's name come its probability,
+words and similarity, with the preview on the right:</p>
+<pre class="ex">99.0%  Almost certain  similarity 0.4447  p17.jpg
+</pre>
+<p>The lines of the files that were not compared are taken out, as <code>K</code> takes lines
+out. The files themselves are not touched. The candidates' marks are taken
+away, and the masters' <code>M</code> is kept. Press <code>C-c f r</code> again to show the list as
+it was.</p>
+<p>The ranked list <code>*facematch*</code> belongs to <code>C-c f f</code> alone. A new comparison
+closes an earlier <code>*facematch*</code> first, so that its ranking is never shown
+beside photos of another comparison.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr><th>Modal</th><th>Non-modal</th><th>Command</th><th>What it does</th></tr>
+</thead>
+<tbody>
+<tr><td>none</td><td><kbd>C-c f r</kbd></td><td><code>facematch-rank-here</code></td><td>Rank the candidates as M-x facematch-compare does, and show the ranking in this rimu list, beside the photos' names, the lines of the files not compared taken out, as K takes them, the candidates' marks taken away (C-c f f shows the ranking in a list of its own).</td></tr>
+</tbody></table></div>
+<h2 id="02-comparing-photos--when-nothing-happens"><span class="num">2.5</span> When nothing happens</h2>
+<p>The commands say why they did not start:</p>
+<ul>
+<li>not in a rimu list: candidates are marked in a rimu list and compared from
+  it;</li>
+<li>no master photo is marked: <code>C-c f m</code> marks one;</li>
+<li>no candidate is marked in this directory: <code>m</code> marks one;</li>
+<li>the engine is not found: the message says how to get it.</li>
+</ul>
+<p>When the engine ran but compared nothing, the message gives its reasons, one
+per photo. Only files are taken. A directory marked as a master or a candidate
+is left out.</p>
+</section>
+<section class="chapter" id="03-what-the-probability-means">
+<h1 id="03-what-the-probability-means--what-the-probability-means">What the probability means</h1>
+<p class="lead">How the engine makes a probability, how well it held, and where it should not
+be trusted.</p>
+<p>A similarity between two faces is not a probability. The engine turns it into
+one with a curve fitted on Labeled Faces in the Wild (LFW): 6000 pairs of
+photos known to be of one person or of two. The curve was checked on folds of
+pairs it had never seen. The fitting and its data are in the engine's project
+(<code>calibrate.py</code> and <code>calibration.json</code>).</p>
+<h2 id="03-what-the-probability-means--how-it-held-on-lfw"><span class="num">3.1</span> How it held on LFW</h2>
+<p>These are scored on folds the curve never saw.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr><th>Measure</th><th class="right">Result</th></tr>
+</thead>
+<tbody>
+<tr><td>Pairs right at 50%</td><td class="right">98.8% (+-0.3% between folds)</td></tr>
+<tr><td>Brier score</td><td class="right">0.010</td></tr>
+<tr><td>Pairs said 0-5% likely: one person</td><td class="right">0.9%</td></tr>
+<tr><td>Said 5-20%: one person</td><td class="right">8.7%</td></tr>
+<tr><td>Said 20-45%: one person</td><td class="right">21.6%</td></tr>
+<tr><td>Said 80-95%: one person</td><td class="right">94.7%</td></tr>
+<tr><td>Said 95% and over: one person</td><td class="right">100%</td></tr>
+</tbody></table></div>
+<p>AuraFace's makers report 99.65% on LFW with their own face detector. This
+engine finds faces with YuNet, whose license is settled, and measures 98.8%.</p>
+<p>Probabilities are shown from 1% to 99%, the ends of the ODNI's scale. No
+calibration on 6000 pairs supports more certainty than that.</p>
+<p>In a photo of several people, a master's face is the largest one. A
+candidate's face is whichever of its faces is likeliest.</p>
+<h2 id="03-what-the-probability-means--where-it-should-not-be-trusted"><span class="num">3.2</span> Where it should not be trusted</h2>
+<ul>
+<li><strong>Even prior odds.</strong> LFW's pairs are half the same person, so the probability
+  says how far the faces move the odds from 50%. If you have reason to think a
+  match is rare, such as one suspect among thousands of photos, the real
+  probability is lower than shown.</li>
+<li><strong>News photos.</strong> LFW is mostly frontal, well-lit news photography. Profile
+  views, poor light, low resolution and age gaps lower accuracy, and the
+  calibration says nothing about how much.</li>
+<li><strong>Several masters.</strong> The curve was fitted on one photo against one. A template
+  of several masters raises genuine scores by design, so the probabilities for a
+  template are somewhat generous.</li>
+<li><strong>Ethnicity.</strong> AuraFace's makers say its training data may not cover all
+  ethnicities well.</li>
+</ul>
+<p>Treat the ranking as a way to find which photos to examine, not as an
+identification.</p>
+</section>
+<section class="chapter" id="04-safety-and-settings">
+<h1 id="04-safety-and-settings--safety-and-settings">Safety and settings</h1>
+<p class="lead">How the engine is kept from your files, and the settings that change a run.</p>
+<p>The photos may be evidence, and a picture can be made to harm the program that
+reads it. So the engine runs shut in Tuatara's sandbox:</p>
+<ul>
+<li>it sees private copies of the photos under names of its own, such as
+  <code>master-1.jpg</code> and <code>candidate-2.png</code>. It never sees the photos' directories
+  or names;</li>
+<li>its AppImage is unpacked once, outside the sandbox because it is your own
+  program, into Tuatara's cache. It is run from there read only, so no run can
+  change it for the next one;</li>
+<li>it has no network, and nothing of yours but its own files;</li>
+<li>it runs in the background, with at most 16 GiB of memory, and is stopped
+  after <code>*facematch-seconds*</code>.</li>
+</ul>
+<p>The copies are deleted when the engine is done. The photos are only read.</p>
+<h2 id="04-safety-and-settings--the-settings"><span class="num">4.1</span> The settings</h2>
+<p>Set them in the package's <code>:config</code> in your init file:</p>
+<pre class="ex"><code class="language-lisp">(load-package &quot;facematch&quot;
+              :source &quot;https://github.com/Tuatara-Editor/tuatara-facematch&quot;
+              :config
+              (setf *facematch-seconds* &quot;30m&quot;))
+</code></pre>
+<div class="tablewrap"><table>
+<thead>
+<tr><th>Setting</th><th>Default</th><th>Values</th><th>What it changes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>*facematch-program*</code></td><td><code>&quot;facematch&quot;</code></td><td>text</td><td>The facematch engine to run.</td></tr>
+<tr><td><code>*facematch-detection-confidence*</code></td><td><code>nil</code></td><td>nil, or a number from 0 to 1</td><td>How sure the face detector must be for a face to count.</td></tr>
+<tr><td><code>*facematch-seconds*</code></td><td><code>900</code></td><td>a whole number of seconds, 1 or more, or a time in words such as 500ms, 90s, 30m or 2h, at most a hundred years</td><td>The most seconds one comparison may take before the engine is stopped.</td></tr>
+</tbody></table></div>
+<p>A value of <code>*facematch-detection-confidence*</code> outside the range stops the
+comparison with an error. <code>C-u C-c f f</code> sets one run's value without changing
+the setting.</p>
+</section>
+<section class="chapter" id="05-every-command-and-setting">
+<h1 id="05-every-command-and-setting--every-command-and-setting">Every command and setting</h1>
+<p class="lead">Each command and setting of facematch, to look one up by name.</p>
+<p>The tables are made from the program each time this manual is made, so they
+never list a command or setting that facematch does not have. The first table
+has four columns. The first two are keys: the modal keys, which work only with
+modal editing on, and the non-modal keys, which work with it off too. A command
+with no key says <kbd>M-x</kbd> and its name in the second column, because you can only
+run it by its name. The third column is the name of the command and the fourth
+says what it does.</p>
+<p>To run a command by its name, press <kbd>M-x</kbd>, type a few letters of the name and
+press <kbd>RET</kbd>. To find a command from within the editor, press <kbd>C-h f</kbd>. To find
+the command that a key runs, press <kbd>C-h k</kbd> and then the key. The editor's own
+settings and commands are in chapters 21 and 22 of its manual.</p>
+<h2 id="05-every-command-and-setting--every-command"><span class="num">5.1</span> Every command</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr><th>Modal</th><th>Non-modal</th><th>Command</th><th>What it does</th></tr>
+</thead>
+<tbody>
+<tr><td>none</td><td><kbd>C-c f f</kbd></td><td><code>facematch-compare</code></td><td>Rank the candidate photos marked (m) in the directory this rimu list shows by how probable it is that each shows the person of the master photos marked (C-c f m, M, in any list), in a rimu list of their own, <strong>facematch</strong>.</td></tr>
+<tr><td>none</td><td><kbd>C-c f r</kbd></td><td><code>facematch-rank-here</code></td><td>Rank the candidates as M-x facematch-compare does, and show the ranking in this rimu list, beside the photos' names, the lines of the files not compared taken out, as K takes them, the candidates' marks taken away (C-c f f shows the ranking in a list of its own).</td></tr>
+</tbody></table></div>
+<h2 id="05-every-command-and-setting--every-setting"><span class="num">5.2</span> Every setting</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr><th>Setting</th><th>Default</th><th>Values</th><th>What it changes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>*facematch-detection-confidence*</code></td><td><code>nil</code></td><td>nil, or a number from 0 to 1</td><td>How sure the face detector must be for a face to count.</td></tr>
+<tr><td><code>*facematch-program*</code></td><td><code>&quot;facematch&quot;</code></td><td>text</td><td>The facematch engine to run.</td></tr>
+<tr><td><code>*facematch-seconds*</code></td><td><code>900</code></td><td>a whole number of seconds, 1 or more, or a time in words such as 500ms, 90s, 30m or 2h, at most a hundred years</td><td>The most seconds one comparison may take before the engine is stopped.</td></tr>
+</tbody></table></div>
+</section>
+</article>
+</main>
+</div>
+</body>
+</html>
