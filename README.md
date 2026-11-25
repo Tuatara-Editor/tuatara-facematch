@@ -23,7 +23,7 @@ setting.
 
 ## What it needs
 
-- Tuatara 0.90.40 or later.
+- Tuatara 0.90.44 or later.
 - The facematch engine, an AppImage (below). It is a project of its own,
   [github.com/YardQuit/facematch](https://github.com/YardQuit/facematch),
   where each release has `facematch-x86_64.AppImage` and its `SHA256SUMS`.

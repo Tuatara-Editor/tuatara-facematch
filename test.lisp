@@ -62,10 +62,10 @@ no arguments, gives true, or TRIES turns have gone."
         (skip "no sandbox here"))
       ;; set, not bound: the comparison runs in a thread of its own
       (setf tuatara-user:*facematch-program* (facematch-stand-in dir given))
-      ;; C-c f m marks the master, m the candidates, C-c f f ranks them in a rimu list of their own
+      ;; g m marks the master, m the candidates, C-c f f ranks them in a rimu list of their own
       (tuatara.io:replace-file (concatenate 'string (namestring given) "notes.txt") "not in the comparison")
       (unwind-protect
-           (let ((f (rimu-session given (list "g f a l i c e RET C-c f m g f c r o w d RET m g f z e d RET m C-c f f"
+           (let ((f (rimu-session given (list "g f a l i c e RET g m g f c r o w d RET m g f z e d RET m C-c f f"
                                               (facematch-listed "*facematch*") :tick)
                                   :width 160 :height 30)))
              (let* ((ranking (tuatara.buffer:find-buffer "*facematch*"))
@@ -96,7 +96,7 @@ no arguments, gives true, or TRIES turns have gone."
       (unwind-protect
            (progn
              (multiple-value-bind (f editor)
-                 (rimu-session given (list "g f a l i c e RET C-c f m g f c r o w d RET m g f z e d RET m C-c f r"
+                 (rimu-session given (list "g f a l i c e RET g m g f c r o w d RET m g f z e d RET m C-c f r"
                                            (facematch-done) :tick :tick)
                                :width 160 :height 30)
                (let ((lines (rimu-lines editor)))
@@ -114,7 +114,8 @@ no arguments, gives true, or TRIES turns have gone."
                ;; no ranked list made: that is C-c f f's
                (false (tuatara.buffer:find-buffer "*facematch*")))
              (multiple-value-bind (f editor)
-                 (rimu-session given (list "g f a l i c e RET C-c f m g f z e d RET m C-c f r" (facematch-done)
+                 (rimu-session given (list "g f a l i c e RET g m g f z e d RET m C-c f r"
+                                           (facematch-done)
                                            ;; the ranking shown before it is hidden again
                                            (waiting-until
                                             (lambda ()
@@ -137,7 +138,7 @@ no arguments, gives true, or TRIES turns have gone."
              (tuatara.io:ensure-directories (concatenate 'string (namestring given) "other/x.jpg"))
              (tuatara.io:replace-file (concatenate 'string (namestring given) "other/x.jpg") "not really a picture")
              (let ((f (rimu-session given
-                                    "g f o t h e r RET RET g f x RET m h g f a l i c e RET C-c f m g f z e d RET m C-c f f"
+                                    (list "g f o t h e r RET RET g f x RET m h g f a l i c e RET g m g f z e d RET m C-c f f")
                                     :width 160 :height 30)))
                (true (tuatara.frontend.fake:fake-frame-showing f "Comparing 1 candidate with 1 master photo"))))
         (setf tuatara-user:*facematch-program* program)))))

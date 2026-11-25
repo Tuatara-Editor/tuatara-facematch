@@ -1,6 +1,6 @@
 ;;;; facematch.lisp --- How probable it is that candidate photos show the person of master photos: facematch.
 ;;;; Copyright (C) 2026 Michael A Jones.  GPL-3.0-or-later; see LICENSE.
-;;;; Needs: Tuatara 0.90.40
+;;;; Needs: Tuatara 0.90.44
 ;;;;
 ;;;; A package, not part of the editor: loaded by (load-package "facematch")
 ;;;; in the init file. It drives the facematch engine, a project of its own
@@ -9,16 +9,16 @@
 ;;;; curve fitted on LFW. The engine is never downloaded from here: it is
 ;;;; the file *facematch-program* names.
 ;;;;
-;;;; Photos are chosen in rimu, its preview showing each: \[rimu-mark-master]
+;;;; Photos are chosen in rimu, its preview showing each: M-x rimu-mark-master
 ;;;; marks a master photo of the person looked for (M, in any list, since masters
 ;;;; often stand in a directory of their own), m marks candidates as for any
-;;;; operation, and \[facematch-compare] compares every master photo marked
+;;;; operation, and C-c f f (facematch-compare) compares every master photo marked
 ;;;; with the candidates marked in the list, in the background. The ranking
 ;;;; is a rimu list of its own, *facematch*: the masters, then the candidates
 ;;;; the most probable first, its preview showing each, a column beside each
 ;;;; name giving the probability that it shows the same person, the ODNI's
 ;;;; words for it (Almost certain ... Almost no chance) and the similarity
-;;;; behind it. \[facematch-rank-here] compares the same way, but shows the
+;;;; behind it. C-c f r (facematch-rank-here) compares the same way, but shows the
 ;;;; ranking in the list itself, beside the names, the files not compared
 ;;;; taken out of it, the candidates' marks taken away. Candidates are those
 ;;;; marked in the directory the list shows; masters may be marked anywhere.
@@ -304,7 +304,7 @@ own). Where the ranking shows already, show the list as it was instead."
 (defun install-facematch ()
   "Bind facematch's keys in rimu, give rimu the ranking column, and have
 \\[check-health] say what it runs."
-  ;; under C-c f, beside rimu's own C-c f m: the one-letter keys of a list are under C-c too
+  ;; under C-c f, as the one-letter keys of a list are under C-c too
   (define-keys *rimu-keymap* '(("C-c f f" facematch-compare) ("C-c f r" facematch-rank-here)))
   (label-keys *rimu-keymap* '(("C-c f" "faces")))
   (rimu-set-column :facematch #'facematch-ranking-cells :place :before :shown 'facematch-ranking-shown-p

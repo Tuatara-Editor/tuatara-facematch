@@ -12,7 +12,7 @@ with =C-x d=. The preview shows the photo under the cursor.
 
 1. Open the directory with the master photos in rimu. The master photos show
    the person you look for.
-2. Press =C-c f m= on a photo to mark it as a master. This is Tuatara's own
+2. Press =g m= on a photo to mark it as a master. This is Tuatara's own
    command, =rimu-mark-master=. An =M= appears in the first column. Mark one
    photo, or several of the same person. Several are averaged into one
    template. Press =u= to take a mark away.
@@ -114,7 +114,7 @@ The commands say why they did not start:
 
 - not in a rimu list: candidates are marked in a rimu list and compared from
   it;
-- no master photo is marked: =C-c f m= marks one;
+- no master photo is marked: =g m= marks one;
 - no candidate is marked in this directory: =m= marks one;
 - the engine is not found: the message says how to get it.
 
