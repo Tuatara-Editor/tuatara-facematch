@@ -13,7 +13,7 @@
 <div class="site">
 <nav class="toc" id="contents" aria-label="Contents">
 <strong>facematch Manual</strong>
-<small>for Tuatara 0.90.34 and later</small>
+<small>for Tuatara 0.90.44 and later</small>
 <p class="tools"><a href="index.html">By chapter</a>
 <button type="button" class="theme" hidden>Dark</button></p>
 <input type="search" placeholder="Search the manual" aria-label="Search the manual">
@@ -22,7 +22,7 @@
 <main>
 <article>
 <h1>facematch Manual</h1>
-<p class="lead">for Tuatara 0.90.34 and later, every chapter on one page</p>
+<p class="lead">for Tuatara 0.90.44 and later, every chapter on one page</p>
 <p>This manual is written with modal editing on, first and foremost. Where a command also has a key that works with modal editing off, it is given as well, as the non-modal key.</p>
 <section class="chapter" id="01-what-facematch-is">
 <h1 id="01-what-facematch-is--what-facematch-is">What facematch is</h1>
@@ -69,7 +69,7 @@ with <code>C-x d</code>. The preview shows the photo under the cursor.</p>
 <ol>
 <li>Open the directory with the master photos in rimu. The master photos show
    the person you look for.</li>
-<li>Press <code>C-c f m</code> on a photo to mark it as a master. This is Tuatara's own
+<li>Press <code>g m</code> on a photo to mark it as a master. This is Tuatara's own
    command, <code>rimu-mark-master</code>. An <code>M</code> appears in the first column. Mark one
    photo, or several of the same person. Several are averaged into one
    template. Press <code>u</code> to take a mark away.</li>
@@ -124,7 +124,7 @@ it, is listed after the others, with <code>not compared</code> and the engine's 
 <tr><th>Modal</th><th>Non-modal</th><th>Command</th><th>What it does</th></tr>
 </thead>
 <tbody>
-<tr><td>none</td><td><kbd>C-c f f</kbd></td><td><code>facematch-compare</code></td><td>Rank the candidate photos marked (m) in the directory this rimu list shows by how probable it is that each shows the person of the master photos marked (C-c f m, M, in any list), in a rimu list of their own, <strong>facematch</strong>.</td></tr>
+<tr><td>none</td><td><kbd>C-c f f</kbd></td><td><code>facematch-compare</code></td><td>Rank the candidate photos marked (m) in the directory this rimu list shows by how probable it is that each shows the person of the master photos marked (g m, M, in any list), in a rimu list of their own, <strong>facematch</strong>.</td></tr>
 </tbody></table></div>
 <h2 id="02-comparing-photos--the-words"><span class="num">2.3</span> The words</h2>
 <p>The words follow the ODNI's scale of estimative probability, from its
@@ -167,7 +167,7 @@ beside photos of another comparison.</p>
 <ul>
 <li>not in a rimu list: candidates are marked in a rimu list and compared from
   it;</li>
-<li>no master photo is marked: <code>C-c f m</code> marks one;</li>
+<li>no master photo is marked: <code>g m</code> marks one;</li>
 <li>no candidate is marked in this directory: <code>m</code> marks one;</li>
 <li>the engine is not found: the message says how to get it.</li>
 </ul>
@@ -280,7 +280,7 @@ settings and commands are in chapters 21 and 22 of its manual.</p>
 <tr><th>Modal</th><th>Non-modal</th><th>Command</th><th>What it does</th></tr>
 </thead>
 <tbody>
-<tr><td>none</td><td><kbd>C-c f f</kbd></td><td><code>facematch-compare</code></td><td>Rank the candidate photos marked (m) in the directory this rimu list shows by how probable it is that each shows the person of the master photos marked (C-c f m, M, in any list), in a rimu list of their own, <strong>facematch</strong>.</td></tr>
+<tr><td>none</td><td><kbd>C-c f f</kbd></td><td><code>facematch-compare</code></td><td>Rank the candidate photos marked (m) in the directory this rimu list shows by how probable it is that each shows the person of the master photos marked (g m, M, in any list), in a rimu list of their own, <strong>facematch</strong>.</td></tr>
 <tr><td>none</td><td><kbd>C-c f r</kbd></td><td><code>facematch-rank-here</code></td><td>Rank the candidates as M-x facematch-compare does, and show the ranking in this rimu list, beside the photos' names, the lines of the files not compared taken out, as K takes them, the candidates' marks taken away (C-c f f shows the ranking in a list of its own).</td></tr>
 </tbody></table></div>
 <h2 id="05-every-command-and-setting--every-setting"><span class="num">5.2</span> Every setting</h2>
