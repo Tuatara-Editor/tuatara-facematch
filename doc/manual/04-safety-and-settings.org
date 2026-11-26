@@ -33,6 +33,6 @@ Set them in the package's =:config= in your init file:
 
 #+table: settings *facematch-program* *facematch-detection-confidence* *facematch-seconds*
 
-A value of =*facematch-detection-confidence*= outside the range stops the
-comparison with an error. =C-u C-c f f= sets one run's value without changing
-the setting.
+Left at its default, nil, =*facematch-detection-confidence*= is the engine's
+own, 0.7. A value outside the range stops the comparison with an error.
+=C-u C-c f f= sets one run's value without changing the setting.

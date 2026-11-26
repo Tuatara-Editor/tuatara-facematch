@@ -10,7 +10,7 @@
 ;;;; the file *facematch-program* names.
 ;;;;
 ;;;; Photos are chosen in rimu, its preview showing each: M-x rimu-mark-master
-;;;; marks a master photo of the person looked for (M, in any list, since masters
+;;;; marks a master photo of the person looked for (in any list, since masters
 ;;;; often stand in a directory of their own), m marks candidates as for any
 ;;;; operation, and C-c f f (facematch-compare) compares every master photo marked
 ;;;; with the candidates marked in the list, in the background. The ranking
@@ -243,15 +243,16 @@ takes them, and the marks of CANDIDATES, the photos compared, taken away."
 ;;; Choosing the photos in rimu
 
 (defun facematch-start (here)
-  "Compare the master photos marked (M, in any rimu list) with the candidates
-marked (m) in the directory the current rimu list shows, in the background;
-with HERE the ranking is to show in this list, else in a list of its own."
+  "Compare the master photos marked (\\<rimu-mode>\\[rimu-mark-master], in any rimu
+list) with the candidates marked (m) in the directory the current rimu list
+shows, in the background; with HERE the ranking is to show in this list, else
+in a list of its own."
   (let* ((buffer (current-buffer))
          (confidence-asked (prefix-argument))
          (masters '()) (candidates '()))
     (setf (values masters candidates) (rimu-paths-marked-apart *rimu-master-mark* :files-only t :buffer buffer))
     (cond ((not (rimu-list-p buffer)) (message "Candidates are marked in a rimu list (\\[rimu]), and compared from it"))
-          ((null masters) (message "No master photo is marked: \\<rimu-mode>\\[rimu-mark-master] marks one (M)"))
+          ((null masters) (message "No master photo is marked: \\<rimu-mode>\\[rimu-mark-master] marks one"))
           ((null candidates)
            (message "No candidate is marked in this directory: \\<rimu-mode>\\[list-mark-entry] marks one"))
           ((null (user-program-path *facematch-program*))
@@ -269,7 +270,7 @@ with HERE the ranking is to show in this list, else in a list of its own."
 (define-command facematch-compare ()
   "Rank the candidate photos marked (m) in the directory this rimu list shows by
 how probable it is that each shows the person of the master photos marked
-\(\\<rimu-mode>\\[rimu-mark-master], M, in any list), in a rimu list of their
+\(\\<rimu-mode>\\[rimu-mark-master], in any list), in a rimu list of their
 own, *facematch*. The list shows the masters, then the candidates, the most
 probable first. Each has its probability, the words of the Office of the
 Director of National Intelligence (ODNI) for it (Almost certain, Very likely,
